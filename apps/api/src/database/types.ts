@@ -149,21 +149,44 @@ export interface AuditEventTable {
     at: TsDefault;
 }
 
-export interface BookingRequestTable {
-    id: string;
+export type InquiryStatus = 'NEW' | 'IN_REVIEW' | 'NEEDS_INFO' | 'ACCEPTED' | 'DECLINED';
+
+export interface InquiryTable {
+    id: Generated<string>;
     service_type_id: string;
-    slot_id: string;
-    requested_starts_at: Ts;
-    requested_ends_at: Ts;
-    customer_first_name: string;
-    customer_last_name: string;
-    customer_email: string;
-    customer_phone: string;
-    tattoo_idea: string;
-    chayns_person_id: string | null;
-    status: ColumnType<string, string | undefined, string>;
+    preferred_artist_id: string | null;
+    preferred_starts_at: ColumnType<Date | null, Date | string | null, Date | string | null>;
+    size_cm: number | null;
+    description: ColumnType<string, string | undefined, string>;
+    status: InquiryStatus;
+    studio_note: string | null;
+    needs_info_message: string | null;
+    decline_reason: string | null;
+    customer_id: string;
+    client_token: string;
     accepted_terms_at: Ts;
     created_at: TsDefault;
+    updated_at: TsDefault;
+}
+
+export interface InquiryRegionTable {
+    inquiry_id: string;
+    region_code: string;
+}
+
+export interface MediaAssetTable {
+    id: Generated<string>;
+    purpose: 'inquiry_reference';
+    inquiry_id: string | null;
+    storage_key: string;
+    content_type: string;
+    original_filename: string | null;
+    byte_size: number;
+    width: number | null;
+    height: number | null;
+    client_token: string;
+    created_at: TsDefault;
+    linked_at: ColumnType<Date | null, Date | string | null, Date | string | null>;
 }
 
 export interface Database {
@@ -179,5 +202,7 @@ export interface Database {
     idempotency_key: IdempotencyKeyTable;
     outbox_event: OutboxEventTable;
     audit_event: AuditEventTable;
-    booking_request: BookingRequestTable;
+    inquiry: InquiryTable;
+    inquiry_region: InquiryRegionTable;
+    media_asset: MediaAssetTable;
 }
