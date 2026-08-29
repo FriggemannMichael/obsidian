@@ -1,4 +1,4 @@
-import type { ServiceType, ServiceTypeId } from '@tattoo-studio/contracts';
+import type { LegacyServiceType as ServiceType, ServiceTypeId } from '@tattoo-studio/contracts';
 
 export const serviceTypes: ServiceType[] = [
     {

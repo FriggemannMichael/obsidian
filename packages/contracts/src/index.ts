@@ -2,7 +2,13 @@ import { z } from 'zod';
 
 export const serviceTypeIdSchema = z.enum(['consultation', 'small-tattoo', 'day-session']);
 
-export const serviceTypeSchema = z.object({
+/**
+ * Legacy-Schemas des ersten MVP-Slices (`/api/v1/*`, synthetische Verfügbarkeit,
+ * Anfrage-Wizard). Die Spec-B-Engine unter `/v1/*` bringt eigene, gleichnamige
+ * Schemas mit (siehe `./service-type.js`, `./availability.js`); um die
+ * Kollision zu vermeiden, tragen die alten Definitionen hier das Präfix `legacy`.
+ */
+export const legacyServiceTypeSchema = z.object({
     id: serviceTypeIdSchema,
     name: z.string(),
     description: z.string(),
@@ -10,32 +16,32 @@ export const serviceTypeSchema = z.object({
     depositCents: z.number().int().nonnegative(),
 });
 
-export const serviceTypesResponseSchema = z.object({
-    items: z.array(serviceTypeSchema),
+export const legacyServiceTypesResponseSchema = z.object({
+    items: z.array(legacyServiceTypeSchema),
 });
 
-export const availabilityQuerySchema = z.object({
+export const legacyAvailabilityQuerySchema = z.object({
     serviceTypeId: serviceTypeIdSchema,
     from: z.iso.date(),
     days: z.coerce.number().int().min(1).max(31).default(14),
 });
 
-export const availabilitySlotSchema = z.object({
+export const legacyAvailabilitySlotSchema = z.object({
     id: z.string(),
     startsAt: z.iso.datetime({ offset: true }),
     endsAt: z.iso.datetime({ offset: true }),
     available: z.boolean(),
 });
 
-export const availabilityResponseSchema = z.object({
+export const legacyAvailabilityResponseSchema = z.object({
     timezone: z.literal('Europe/Berlin'),
-    serviceType: serviceTypeSchema,
-    slots: z.array(availabilitySlotSchema),
+    serviceType: legacyServiceTypeSchema,
+    slots: z.array(legacyAvailabilitySlotSchema),
 });
 
 export const createBookingRequestSchema = z.object({
     serviceTypeId: serviceTypeIdSchema,
-    slot: availabilitySlotSchema.pick({ id: true, startsAt: true, endsAt: true }),
+    slot: legacyAvailabilitySlotSchema.pick({ id: true, startsAt: true, endsAt: true }),
     customer: z.object({
         firstName: z.string().trim().min(2).max(80),
         lastName: z.string().trim().min(2).max(80),
@@ -57,17 +63,17 @@ export const createBookingRequestResponseSchema = z.object({
     request: bookingRequestSchema,
 });
 
-export const apiErrorSchema = z.object({
-    code: z.string(),
-    message: z.string(),
-    issues: z.array(z.object({ path: z.string(), message: z.string() })).optional(),
-});
-
 export type ServiceTypeId = z.infer<typeof serviceTypeIdSchema>;
-export type ServiceType = z.infer<typeof serviceTypeSchema>;
-export type AvailabilityQuery = z.infer<typeof availabilityQuerySchema>;
-export type AvailabilitySlot = z.infer<typeof availabilitySlotSchema>;
-export type AvailabilityResponse = z.infer<typeof availabilityResponseSchema>;
+export type LegacyServiceType = z.infer<typeof legacyServiceTypeSchema>;
+export type LegacyAvailabilityQuery = z.infer<typeof legacyAvailabilityQuerySchema>;
+export type LegacyAvailabilitySlot = z.infer<typeof legacyAvailabilitySlotSchema>;
+export type LegacyAvailabilityResponse = z.infer<typeof legacyAvailabilityResponseSchema>;
 export type CreateBookingRequest = z.infer<typeof createBookingRequestSchema>;
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;
-export type ApiError = z.infer<typeof apiErrorSchema>;
+
+export * from './errors.js';
+export * from './service-type.js';
+export * from './artist.js';
+export * from './availability.js';
+export * from './slot-hold.js';
+export * from './admin.js';

@@ -1,4 +1,7 @@
-import type { AvailabilitySlot, ServiceType } from '@tattoo-studio/contracts';
+import type {
+    LegacyAvailabilitySlot as AvailabilitySlot,
+    LegacyServiceType as ServiceType,
+} from '@tattoo-studio/contracts';
 import { DateTime } from 'luxon';
 
 const TIMEZONE = 'Europe/Berlin';

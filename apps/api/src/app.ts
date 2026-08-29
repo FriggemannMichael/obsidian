@@ -1,6 +1,6 @@
 import cors from '@fastify/cors';
 import {
-    availabilityQuerySchema,
+    legacyAvailabilityQuerySchema,
     createBookingRequestSchema,
 } from '@tattoo-studio/contracts';
 import Fastify from 'fastify';
@@ -48,7 +48,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
     app.get('/api/v1/service-types', async () => ({ items: serviceTypes }));
 
     app.get('/api/v1/availability', async (request, reply) => {
-        const result = availabilityQuerySchema.safeParse(request.query);
+        const result = legacyAvailabilityQuerySchema.safeParse(request.query);
 
         if (!result.success) {
             return reply.status(400).send(validationError(result.error.issues));

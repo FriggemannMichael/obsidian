@@ -1,7 +1,7 @@
 import {
-    availabilityResponseSchema,
+    legacyAvailabilityResponseSchema as availabilityResponseSchema,
     createBookingRequestResponseSchema,
-    serviceTypesResponseSchema,
+    legacyServiceTypesResponseSchema as serviceTypesResponseSchema,
     type CreateBookingRequest,
     type ServiceTypeId,
 } from '@tattoo-studio/contracts';

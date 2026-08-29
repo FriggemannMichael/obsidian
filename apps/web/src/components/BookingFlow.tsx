@@ -3,9 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
     createBookingRequestSchema,
-    type AvailabilitySlot,
+    type LegacyAvailabilitySlot as AvailabilitySlot,
     type CreateBookingRequest,
-    type ServiceType,
+    type LegacyServiceType as ServiceType,
     type ServiceTypeId,
 } from '@tattoo-studio/contracts';
 import { useForm } from 'react-hook-form';
