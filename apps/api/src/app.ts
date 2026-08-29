@@ -9,6 +9,7 @@ import { createAvailability } from './availability.js';
 import { findServiceType, serviceTypes } from './catalog.js';
 import type { AppConfig } from './config.js';
 import type { Database } from './database/types.js';
+import { registerRateLimit } from './plugins/rate-limit.js';
 import { adminHoldRoutes } from './routes/admin-holds.js';
 import { availabilityRoutes } from './routes/availability.js';
 import { slotHoldRoutes } from './routes/slot-holds.js';
@@ -54,6 +55,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
     });
 
     if (options.db && options.config) {
+        registerRateLimit(app);
         app.register(availabilityRoutes, { db: options.db, config: options.config });
         app.register(slotHoldRoutes, { db: options.db, config: options.config });
         app.register(adminHoldRoutes, { db: options.db, config: options.config });

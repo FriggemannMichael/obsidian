@@ -3,39 +3,44 @@ import type { Kysely } from 'kysely';
 import { slotHoldRequestSchema } from '@tattoo-studio/contracts';
 import type { AppConfig } from '../config.js';
 import type { Database } from '../database/types.js';
+import { slotHoldRateLimit } from '../plugins/rate-limit.js';
 import { createHold, HoldNotFoundError, releaseHoldById } from '../services/hold-service.js';
 
 export const slotHoldRoutes = async (
     app: FastifyInstance,
     opts: { db: Kysely<Database>; config: AppConfig },
 ) => {
-    app.post('/v1/slot-holds', async (request, reply) => {
-        const idempotencyKey = request.headers['idempotency-key'];
-        const clientToken = request.headers['x-client-token'];
-        if (typeof idempotencyKey !== 'string' || typeof clientToken !== 'string') {
-            return reply.status(400).send({
-                code: 'VALIDATION_ERROR',
-                message: 'Idempotency-Key und X-Client-Token sind erforderlich.',
+    app.post(
+        '/v1/slot-holds',
+        { config: { rateLimit: slotHoldRateLimit(opts.config) } },
+        async (request, reply) => {
+            const idempotencyKey = request.headers['idempotency-key'];
+            const clientToken = request.headers['x-client-token'];
+            if (typeof idempotencyKey !== 'string' || typeof clientToken !== 'string') {
+                return reply.status(400).send({
+                    code: 'VALIDATION_ERROR',
+                    message: 'Idempotency-Key und X-Client-Token sind erforderlich.',
+                });
+            }
+            const parsed = slotHoldRequestSchema.safeParse(request.body);
+            if (!parsed.success) {
+                return reply.status(400).send({
+                    code: 'VALIDATION_ERROR',
+                    message: 'Ungültige Anfrage.',
+                    issues: parsed.error.issues.map((i) => ({
+                        path: i.path.join('.'),
+                        message: i.message,
+                    })),
+                });
+            }
+            const { statusCode, payload } = await createHold(opts.db, opts.config, {
+                idempotencyKey,
+                clientToken,
+                body: parsed.data,
             });
-        }
-        const parsed = slotHoldRequestSchema.safeParse(request.body);
-        if (!parsed.success) {
-            return reply.status(400).send({
-                code: 'VALIDATION_ERROR',
-                message: 'Ungültige Anfrage.',
-                issues: parsed.error.issues.map((i) => ({
-                    path: i.path.join('.'),
-                    message: i.message,
-                })),
-            });
-        }
-        const { statusCode, payload } = await createHold(opts.db, opts.config, {
-            idempotencyKey,
-            clientToken,
-            body: parsed.data,
-        });
-        return reply.status(statusCode).send(payload);
-    });
+            return reply.status(statusCode).send(payload);
+        },
+    );
 
     app.delete<{ Params: { id: string } }>('/v1/slot-holds/:id', async (request, reply) => {
         const clientToken = request.headers['x-client-token'];
