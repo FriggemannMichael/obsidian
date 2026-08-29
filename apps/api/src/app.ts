@@ -14,6 +14,7 @@ import { registerRateLimit } from './plugins/rate-limit.js';
 import { createUploadsStorage } from './plugins/uploads-storage.js';
 import { adminHoldRoutes } from './routes/admin-holds.js';
 import { availabilityRoutes } from './routes/availability.js';
+import { inquiryRoutes } from './routes/inquiries.js';
 import { serviceTypeRoutes } from './routes/service-types.js';
 import { slotHoldRoutes } from './routes/slot-holds.js';
 import { uploadRoutes } from './routes/uploads.js';
@@ -65,6 +66,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
         app.register(availabilityRoutes, { db: options.db, config: options.config });
         app.register(serviceTypeRoutes, { db: options.db });
         app.register(uploadRoutes, { db: options.db, config: options.config, storage });
+        app.register(inquiryRoutes, { db: options.db, config: options.config });
         app.register(slotHoldRoutes, { db: options.db, config: options.config });
         app.register(adminHoldRoutes, { db: options.db, config: options.config });
     }
