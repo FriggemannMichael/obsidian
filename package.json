@@ -15,7 +15,7 @@
         "check-types": "npm run build --workspace @tattoo-studio/contracts && npm run check-types --workspaces --if-present",
         "db:migrate": "npm run db:migrate --workspace @tattoo-studio/api",
         "db:up": "docker compose up -d postgres",
-        "dev": "npm run build --workspace @tattoo-studio/contracts && concurrently -n api,web -c cyan,magenta \"npm run dev --workspace @tattoo-studio/api\" \"npm run dev --workspace @tattoo-studio/web\"",
+        "dev": "npm run build --workspace @tattoo-studio/contracts && concurrently -n api,worker,web -c cyan,yellow,magenta \"npm run dev --workspace @tattoo-studio/api\" \"npm run worker --workspace @tattoo-studio/api\" \"npm run dev --workspace @tattoo-studio/web\"",
         "format": "npm run format --workspaces --if-present",
         "test": "npm run build --workspace @tattoo-studio/contracts && npm run test --workspaces --if-present"
     },

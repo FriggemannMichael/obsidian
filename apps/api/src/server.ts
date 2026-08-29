@@ -1,4 +1,5 @@
 import { buildApp } from './app.js';
+import { loadConfig } from './config.js';
 import { createDatabase } from './database/client.js';
 import {
     MemoryBookingRequestRepository,
@@ -7,13 +8,20 @@ import {
 
 const port = Number(process.env.PORT ?? 3000);
 const host = process.env.HOST ?? '0.0.0.0';
-const repository = process.env.DATABASE_URL
-    ? new PostgresBookingRequestRepository(createDatabase(process.env.DATABASE_URL))
-    : new MemoryBookingRequestRepository();
-const app = buildApp({ logger: true, repository });
 
-if (!process.env.DATABASE_URL) {
-    app.log.warn('DATABASE_URL fehlt: Anfragen werden nur im Arbeitsspeicher gespeichert.');
+const dbUrl = process.env.DATABASE_URL;
+const db = dbUrl ? createDatabase(dbUrl) : undefined;
+const config = db ? loadConfig() : undefined;
+const repository = db
+    ? new PostgresBookingRequestRepository(db)
+    : new MemoryBookingRequestRepository();
+
+const app = buildApp({ logger: true, repository, config, db });
+
+if (!dbUrl) {
+    app.log.warn(
+        'DATABASE_URL fehlt: /v1/*-Kalenderrouten sind deaktiviert, Anfragen nur im Arbeitsspeicher.',
+    );
 }
 
 try {
