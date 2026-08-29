@@ -10,3 +10,6 @@ coverage/
 .idea/workspace.xml
 .idea/shelf/
 .idea/httpRequests/
+
+# Superpowers brainstorming visual companion
+.superpowers/
