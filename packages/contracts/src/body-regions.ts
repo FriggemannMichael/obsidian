@@ -1,0 +1,58 @@
+import { z } from 'zod';
+
+export const bodyRegionCodeSchema = z.enum([
+    'front.head', 'front.neck', 'front.chest', 'front.abdomen', 'front.pelvis',
+    'front.shoulder.left', 'front.shoulder.right',
+    'front.upper_arm.left', 'front.upper_arm.right',
+    'front.forearm.left', 'front.forearm.right',
+    'front.hand.left', 'front.hand.right',
+    'front.thigh.left', 'front.thigh.right',
+    'front.lower_leg.left', 'front.lower_leg.right',
+    'front.foot.left', 'front.foot.right',
+    'back.head', 'back.neck', 'back.upper_back', 'back.lower_back', 'back.buttocks',
+    'back.shoulder_blade.left', 'back.shoulder_blade.right',
+    'back.upper_arm.left', 'back.upper_arm.right',
+    'back.forearm.left', 'back.forearm.right',
+    'back.thigh.left', 'back.thigh.right',
+    'back.calf.left', 'back.calf.right',
+]);
+
+export type BodyRegionCode = z.infer<typeof bodyRegionCodeSchema>;
+
+/** Einzige Quelle für Anzeigetexte. `links`/`rechts` = aus Sicht der Kundin. */
+export const bodyRegionLabels: Record<BodyRegionCode, string> = {
+    'front.head': 'Kopf / Gesicht',
+    'front.neck': 'Hals',
+    'front.chest': 'Brust',
+    'front.abdomen': 'Bauch',
+    'front.pelvis': 'Becken / Leiste',
+    'front.shoulder.left': 'Schulter links',
+    'front.shoulder.right': 'Schulter rechts',
+    'front.upper_arm.left': 'Oberarm links',
+    'front.upper_arm.right': 'Oberarm rechts',
+    'front.forearm.left': 'Unterarm links',
+    'front.forearm.right': 'Unterarm rechts',
+    'front.hand.left': 'Hand links',
+    'front.hand.right': 'Hand rechts',
+    'front.thigh.left': 'Oberschenkel links',
+    'front.thigh.right': 'Oberschenkel rechts',
+    'front.lower_leg.left': 'Unterschenkel links',
+    'front.lower_leg.right': 'Unterschenkel rechts',
+    'front.foot.left': 'Fuß links',
+    'front.foot.right': 'Fuß rechts',
+    'back.head': 'Hinterkopf',
+    'back.neck': 'Nacken',
+    'back.upper_back': 'Oberer Rücken',
+    'back.lower_back': 'Unterer Rücken / Lende',
+    'back.buttocks': 'Gesäß',
+    'back.shoulder_blade.left': 'Schulterblatt links',
+    'back.shoulder_blade.right': 'Schulterblatt rechts',
+    'back.upper_arm.left': 'Oberarm links (hinten)',
+    'back.upper_arm.right': 'Oberarm rechts (hinten)',
+    'back.forearm.left': 'Unterarm links (hinten)',
+    'back.forearm.right': 'Unterarm rechts (hinten)',
+    'back.thigh.left': 'Hinterer Oberschenkel links',
+    'back.thigh.right': 'Hinterer Oberschenkel rechts',
+    'back.calf.left': 'Wade links',
+    'back.calf.right': 'Wade rechts',
+};
