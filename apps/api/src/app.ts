@@ -13,6 +13,7 @@ import type { Database } from './database/types.js';
 import { registerRateLimit } from './plugins/rate-limit.js';
 import { createUploadsStorage } from './plugins/uploads-storage.js';
 import { adminHoldRoutes } from './routes/admin-holds.js';
+import { adminInquiryRoutes } from './routes/admin-inquiries.js';
 import { availabilityRoutes } from './routes/availability.js';
 import { inquiryRoutes } from './routes/inquiries.js';
 import { serviceTypeRoutes } from './routes/service-types.js';
@@ -69,6 +70,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
         app.register(inquiryRoutes, { db: options.db, config: options.config });
         app.register(slotHoldRoutes, { db: options.db, config: options.config });
         app.register(adminHoldRoutes, { db: options.db, config: options.config });
+        app.register(adminInquiryRoutes, { db: options.db, config: options.config });
     }
 
     app.get('/api/v1/service-types', async () => ({ items: serviceTypes }));
