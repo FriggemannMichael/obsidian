@@ -1,4 +1,5 @@
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import {
     legacyAvailabilityQuerySchema,
     createBookingRequestSchema,
@@ -10,9 +11,12 @@ import { findServiceType, serviceTypes } from './catalog.js';
 import type { AppConfig } from './config.js';
 import type { Database } from './database/types.js';
 import { registerRateLimit } from './plugins/rate-limit.js';
+import { createUploadsStorage } from './plugins/uploads-storage.js';
 import { adminHoldRoutes } from './routes/admin-holds.js';
 import { availabilityRoutes } from './routes/availability.js';
+import { serviceTypeRoutes } from './routes/service-types.js';
 import { slotHoldRoutes } from './routes/slot-holds.js';
+import { uploadRoutes } from './routes/uploads.js';
 import {
     MemoryBookingRequestRepository,
     type BookingRequestRepository,
@@ -56,7 +60,11 @@ export const buildApp = (options: BuildAppOptions = {}) => {
 
     if (options.db && options.config) {
         registerRateLimit(app);
+        app.register(multipart, { limits: { fileSize: options.config.maxUploadBytes, files: 1 } });
+        const storage = createUploadsStorage(options.config.uploadsDir);
         app.register(availabilityRoutes, { db: options.db, config: options.config });
+        app.register(serviceTypeRoutes, { db: options.db });
+        app.register(uploadRoutes, { db: options.db, config: options.config, storage });
         app.register(slotHoldRoutes, { db: options.db, config: options.config });
         app.register(adminHoldRoutes, { db: options.db, config: options.config });
     }
