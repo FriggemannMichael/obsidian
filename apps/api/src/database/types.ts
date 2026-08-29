@@ -19,6 +19,14 @@ export interface BookingRequestTable {
     created_at: ColumnType<Date, Date | string | undefined, Date | string>;
 }
 
+export type BlockStatus =
+    | 'HELD'
+    | 'PAYMENT_PENDING'
+    | 'CONFIRMED'
+    | 'COMPLETED'
+    | 'EXPIRED'
+    | 'CANCELLED';
+
 export interface Database {
     booking_request: BookingRequestTable;
 }
