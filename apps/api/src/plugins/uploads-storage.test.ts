@@ -1,4 +1,4 @@
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
@@ -10,6 +10,8 @@ beforeAll(() => {
     dir = mkdtempSync(join(tmpdir(), 'uploads-'));
     storage = createUploadsStorage(dir);
 });
+
+afterAll(() => { rmSync(dir, { recursive: true, force: true }); });
 
 it('writes, reads, stats and removes a file by key', async () => {
     const key = storage.keyFor('jpg');

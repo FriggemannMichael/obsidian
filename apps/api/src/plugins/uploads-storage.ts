@@ -29,8 +29,9 @@ export const createUploadsStorage = (baseDir: string): UploadsStorage => {
             try {
                 const s = await stat(pathFor(key));
                 return { size: s.size };
-            } catch {
-                return undefined;
+            } catch (err) {
+                if ((err as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
+                throw err;
             }
         },
         async remove(key) {
