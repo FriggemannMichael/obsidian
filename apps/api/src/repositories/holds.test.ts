@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { createTestDb, type TestDb } from '../testing/db.js';
+import { upsertCustomer } from './customer.js';
 import {
     confirmHoldBlock,
     declineHoldBlock,
@@ -9,7 +10,6 @@ import {
     insertHoldBlock,
     releaseHold,
     SlotConflictError,
-    upsertCustomer,
 } from './holds.js';
 
 let ctx: TestDb;

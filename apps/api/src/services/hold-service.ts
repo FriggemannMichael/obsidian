@@ -13,6 +13,7 @@ import {
 } from '../repositories/idempotency.js';
 import { enqueueOutbox } from '../repositories/outbox.js';
 import { recordAudit } from '../repositories/audit.js';
+import { upsertCustomer } from '../repositories/customer.js';
 import {
     HoldNotFoundError,
     SlotConflictError,
@@ -20,7 +21,6 @@ import {
     findFreeResourceId,
     insertHoldBlock,
     releaseHold,
-    upsertCustomer,
 } from '../repositories/holds.js';
 
 class SlotUnavailable extends Error {
