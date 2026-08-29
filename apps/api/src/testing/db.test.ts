@@ -17,8 +17,7 @@ it('provides a migrated database', async () => {
     expect((rows[0] as { n: number }).n).toBeGreaterThan(5);
 });
 
-// Aktiviert in Task 5, sobald `artist` samt Seed existiert.
-it.skip('truncateAll clears data tables', async () => {
+it('truncateAll clears data tables', async () => {
     await ctx.db
         .insertInto('artist')
         .values({
