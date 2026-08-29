@@ -807,9 +807,9 @@ Und im `Database`-Interface: `booking_request: BookingRequestTable;` entfernen, 
 
 > `Ts` / `TsDefault` / `Generated` / `ColumnType` sind in `types.ts` bereits importiert bzw. definiert (Spec B).
 
-- [ ] **Step 5: `repository.ts`-Bruch temporär hinnehmen** — `apps/api/src/repository.ts` und `apps/api/src/app.ts` referenzieren `booking_request` noch. Diese Dateien werden in Task 19 entfernt. Bis dahin: `npm run check-types --workspace @tattoo-studio/api` schlägt fehl. **Das ist erwartet** — die Schema-Tests (`vitest`, kein tsc) laufen trotzdem. Nach Task 19 ist `check-types` wieder grün.
+- [ ] **Step 5: `repository.ts`-Bruch temporär hinnehmen** — `apps/api/src/repository.ts` und `apps/api/src/app.ts` referenzieren `booking_request` noch. Diese Dateien werden in Task 17 entfernt. Bis dahin: `npm run check-types --workspace @tattoo-studio/api` schlägt fehl. **Das ist erwartet** — die Schema-Tests (`vitest`, kein tsc) laufen trotzdem. Nach Task 17 ist `check-types` wieder grün.
 
-  > Alternativ, wenn ein grüner `check-types`-Zwischenstand gewünscht ist: Task 19 (Legacy-Abbau) **vor** Task 4 ausführen. Der Plan ordnet Task 19 spät ein, weil der Legacy-Abbau die neuen `/v1`-Routen als Ersatz braucht; die Reihenfolge 4→…→19 ist die empfohlene, 19→4 ist zulässig.
+  > Alternativ, wenn ein grüner `check-types`-Zwischenstand gewünscht ist: Task 17 (Legacy-API-Abbau) **vor** Task 4 ausführen. Der Plan ordnet Task 17 spät ein, weil der Legacy-Abbau die neuen `/v1`-Routen als Ersatz braucht; die Reihenfolge 4→…→17 ist die empfohlene, 17→4 ist zulässig.
 
 - [ ] **Step 6: Run tests**
 
