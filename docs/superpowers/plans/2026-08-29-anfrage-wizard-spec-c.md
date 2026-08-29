@@ -3640,7 +3640,7 @@ export const createInquiry = async (payload: CreateInquiry): Promise<InquiryResp
 
 - [ ] **Step 4: `.env` / `.env.development.local` anpassen** — `PUBLIC_BOOKING_API_URL` auf die Basis ohne `/api/v1` setzen:
   - `apps/web/.env`: `PUBLIC_BOOKING_API_URL = https://api.example.com`
-  - `apps/web/.env.development.local`: `PUBLIC_BOOKING_API_URL=http://localhost:3000`
+  - `apps/web/.env.development.local`: `PUBLIC_BOOKING_API_URL=http://localhost:3000`  *(lokal, gitignored — nicht committen)*
 
 - [ ] **Step 5: Run test, verify it passes**
 
@@ -3650,7 +3650,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add apps/web/src/wizard/api/inquiryApi.ts apps/web/src/wizard/api/inquiryApi.test.ts apps/web/.env apps/web/.env.development.local
+git add apps/web/src/wizard/api/inquiryApi.ts apps/web/src/wizard/api/inquiryApi.test.ts apps/web/.env
 git commit -m "feat(web): API-Client für Anfrage, Upload und Service-Typen"
 ```
 
