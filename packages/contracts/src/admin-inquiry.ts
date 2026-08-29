@@ -3,22 +3,22 @@ import { bodyRegionCodeSchema } from './body-regions.js';
 import { inquiryStatusSchema } from './inquiry.js';
 
 export const inquiryListItemSchema = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     status: inquiryStatusSchema,
     serviceTypeId: z.string(),
     serviceTypeName: z.string(),
     preferredArtistId: z.string().nullable(),
-    preferredStartsAt: z.string().datetime({ offset: true }).nullable(),
+    preferredStartsAt: z.iso.datetime({ offset: true }).nullable(),
     customerName: z.string(),
     sizeCm: z.number().int().nullable(),
     regionCount: z.number().int(),
     imageCount: z.number().int(),
-    createdAt: z.string().datetime({ offset: true }),
+    createdAt: z.iso.datetime({ offset: true }),
 });
 export type InquiryListItem = z.infer<typeof inquiryListItemSchema>;
 
 export const inquiryImageSchema = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     url: z.string(),
     width: z.number().int().positive().nullable(),
     height: z.number().int().positive().nullable(),
@@ -38,7 +38,7 @@ export const inquiryDetailSchema = inquiryListItemSchema.extend({
     studioNote: z.string().nullable(),
     needsInfoMessage: z.string().nullable(),
     declineReason: z.string().nullable(),
-    acceptedTermsAt: z.string().datetime({ offset: true }),
+    acceptedTermsAt: z.iso.datetime({ offset: true }),
 });
 export type InquiryDetail = z.infer<typeof inquiryDetailSchema>;
 

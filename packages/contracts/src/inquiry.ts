@@ -7,11 +7,11 @@ export type InquiryStatus = z.infer<typeof inquiryStatusSchema>;
 export const createInquirySchema = z.object({
     serviceTypeId: z.string().min(1),
     preferredArtistId: z.string().min(1).default('any'),
-    preferredStartsAt: z.string().datetime({ offset: true }).optional(),
+    preferredStartsAt: z.iso.datetime({ offset: true }).optional(),
     bodyRegions: z.array(bodyRegionCodeSchema).min(1).max(20),
     sizeCm: z.number().int().positive().max(300).optional(),
     description: z.string().trim().max(2000).default(''),
-    referenceImageIds: z.array(z.string().uuid()).max(5).default([]),
+    referenceImageIds: z.array(z.uuid()).max(5).default([]),
     customer: z.object({
         firstName: z.string().trim().min(2).max(80),
         lastName: z.string().trim().min(2).max(80),
@@ -24,9 +24,9 @@ export const createInquirySchema = z.object({
 export type CreateInquiry = z.infer<typeof createInquirySchema>;
 
 export const inquiryResponseSchema = z.object({
-    inquiryId: z.string().uuid(),
+    inquiryId: z.uuid(),
     status: inquiryStatusSchema,
     reference: z.string(),
-    createdAt: z.string().datetime({ offset: true }),
+    createdAt: z.iso.datetime({ offset: true }),
 });
 export type InquiryResponse = z.infer<typeof inquiryResponseSchema>;

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const uploadResultSchema = z.object({
-    uploadId: z.string().uuid(),
+    uploadId: z.uuid(),
     url: z.string(),
     contentType: z.string(),
     width: z.number().int().positive().nullable(),
