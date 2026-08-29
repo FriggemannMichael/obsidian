@@ -29,4 +29,22 @@ describe('loadConfig', () => {
     it('rejects non-positive numbers', () => {
         expect(() => loadConfig({ ...base, GRID_MINUTES: '0' })).toThrow();
     });
+
+    it('applies spec C upload defaults', () => {
+        const c = loadConfig({ ADMIN_API_TOKEN: 'test-token' });
+        expect(c).toMatchObject({
+            uploadsDir: 'apps/api/var/uploads',
+            maxUploadBytes: 10_485_760,
+            orphanUploadTtlHours: 24,
+            uploadRateLimitMax: 30,
+            inquiryRateLimitMax: 5,
+        });
+    });
+
+    it('parses upload overrides and rejects a blank UPLOADS_DIR', () => {
+        const c = loadConfig({ ADMIN_API_TOKEN: 't', UPLOADS_DIR: '/data/up', MAX_UPLOAD_BYTES: '5000000' });
+        expect(c.uploadsDir).toBe('/data/up');
+        expect(c.maxUploadBytes).toBe(5_000_000);
+        expect(() => loadConfig({ ADMIN_API_TOKEN: 't', UPLOADS_DIR: '' })).toThrow();
+    });
 });
