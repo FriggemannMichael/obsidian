@@ -1,17 +1,11 @@
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
-import {
-    legacyAvailabilityQuerySchema,
-    createBookingRequestSchema,
-} from '@tattoo-studio/contracts';
 import Fastify from 'fastify';
-import type { Kysely } from 'kysely';
-import { createAvailability } from './availability.js';
-import { findServiceType, serviceTypes } from './catalog.js';
+import { sql, type Kysely } from 'kysely';
 import type { AppConfig } from './config.js';
 import type { Database } from './database/types.js';
-import { registerRateLimit } from './plugins/rate-limit.js';
 import { createUploadsStorage } from './plugins/uploads-storage.js';
+import { registerRateLimit } from './plugins/rate-limit.js';
 import { adminHoldRoutes } from './routes/admin-holds.js';
 import { adminInquiryRoutes } from './routes/admin-inquiries.js';
 import { availabilityRoutes } from './routes/availability.js';
@@ -19,95 +13,41 @@ import { inquiryRoutes } from './routes/inquiries.js';
 import { serviceTypeRoutes } from './routes/service-types.js';
 import { slotHoldRoutes } from './routes/slot-holds.js';
 import { uploadRoutes } from './routes/uploads.js';
-import {
-    MemoryBookingRequestRepository,
-    type BookingRequestRepository,
-} from './repository.js';
 
 type BuildAppOptions = {
-    repository?: BookingRequestRepository;
     logger?: boolean;
     config?: AppConfig;
     db?: Kysely<Database>;
 };
 
-const validationError = (issues: { path: PropertyKey[]; message: string }[]) => ({
-    code: 'VALIDATION_ERROR',
-    message: 'Die übermittelten Daten sind unvollständig oder ungültig.',
-    issues: issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })),
-});
-
 export const buildApp = (options: BuildAppOptions = {}) => {
     const app = Fastify({ logger: options.logger ?? false });
-    const repository: BookingRequestRepository =
-        options.repository ?? new MemoryBookingRequestRepository();
+    const { db, config } = options;
 
-    app.addHook('onClose', async () => {
-        await repository.close?.();
-    });
-
-    app.register(cors, {
-        origin: true,
-        methods: ['GET', 'POST'],
-    });
+    app.register(cors, { origin: true, methods: ['GET', 'POST', 'DELETE'] });
 
     app.get('/health', async (_request, reply) => {
+        if (!db) return { status: 'ok', persistence: 'memory' as const };
         try {
-            await repository.check();
-            return { status: 'ok', persistence: repository.persistence };
+            await sql`select 1`.execute(db);
+            return { status: 'ok', persistence: 'postgres' as const };
         } catch {
             return reply.status(503).send({ status: 'unavailable' });
         }
     });
 
-    if (options.db && options.config) {
+    if (db && config) {
         registerRateLimit(app);
-        app.register(multipart, { limits: { fileSize: options.config.maxUploadBytes, files: 1 } });
-        const storage = createUploadsStorage(options.config.uploadsDir);
-        app.register(availabilityRoutes, { db: options.db, config: options.config });
-        app.register(serviceTypeRoutes, { db: options.db });
-        app.register(uploadRoutes, { db: options.db, config: options.config, storage });
-        app.register(inquiryRoutes, { db: options.db, config: options.config });
-        app.register(slotHoldRoutes, { db: options.db, config: options.config });
-        app.register(adminHoldRoutes, { db: options.db, config: options.config });
-        app.register(adminInquiryRoutes, { db: options.db, config: options.config });
+        app.register(multipart, { limits: { fileSize: config.maxUploadBytes, files: 1 } });
+        const storage = createUploadsStorage(config.uploadsDir);
+        app.register(serviceTypeRoutes, { db });
+        app.register(uploadRoutes, { db, config, storage });
+        app.register(availabilityRoutes, { db, config });
+        app.register(inquiryRoutes, { db, config });
+        app.register(slotHoldRoutes, { db, config });
+        app.register(adminHoldRoutes, { db, config });
+        app.register(adminInquiryRoutes, { db, config });
     }
-
-    app.get('/api/v1/service-types', async () => ({ items: serviceTypes }));
-
-    app.get('/api/v1/availability', async (request, reply) => {
-        const result = legacyAvailabilityQuerySchema.safeParse(request.query);
-
-        if (!result.success) {
-            return reply.status(400).send(validationError(result.error.issues));
-        }
-
-        const serviceType = findServiceType(result.data.serviceTypeId);
-
-        if (!serviceType) {
-            return reply.status(404).send({
-                code: 'SERVICE_TYPE_NOT_FOUND',
-                message: 'Die gewählte Terminart wurde nicht gefunden.',
-            });
-        }
-
-        return {
-            timezone: 'Europe/Berlin' as const,
-            serviceType,
-            slots: createAvailability(serviceType, result.data.from, result.data.days),
-        };
-    });
-
-    app.post('/api/v1/booking-requests', async (request, reply) => {
-        const result = createBookingRequestSchema.safeParse(request.body);
-
-        if (!result.success) {
-            return reply.status(400).send(validationError(result.error.issues));
-        }
-
-        const bookingRequest = await repository.create(result.data);
-        return reply.status(201).send({ request: bookingRequest });
-    });
 
     return app;
 };
