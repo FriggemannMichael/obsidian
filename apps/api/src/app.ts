@@ -4,8 +4,12 @@ import {
     createBookingRequestSchema,
 } from '@tattoo-studio/contracts';
 import Fastify from 'fastify';
+import type { Kysely } from 'kysely';
 import { createAvailability } from './availability.js';
 import { findServiceType, serviceTypes } from './catalog.js';
+import type { AppConfig } from './config.js';
+import type { Database } from './database/types.js';
+import { availabilityRoutes } from './routes/availability.js';
 import {
     MemoryBookingRequestRepository,
     type BookingRequestRepository,
@@ -14,6 +18,8 @@ import {
 type BuildAppOptions = {
     repository?: BookingRequestRepository;
     logger?: boolean;
+    config?: AppConfig;
+    db?: Kysely<Database>;
 };
 
 const validationError = (issues: { path: PropertyKey[]; message: string }[]) => ({
@@ -44,6 +50,10 @@ export const buildApp = (options: BuildAppOptions = {}) => {
             return reply.status(503).send({ status: 'unavailable' });
         }
     });
+
+    if (options.db && options.config) {
+        app.register(availabilityRoutes, { db: options.db, config: options.config });
+    }
 
     app.get('/api/v1/service-types', async () => ({ items: serviceTypes }));
 
