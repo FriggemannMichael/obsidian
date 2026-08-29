@@ -9,6 +9,8 @@
         "db:migrate": "tsx src/database/migrate.ts",
         "dev": "tsx watch src/server.ts",
         "start": "node dist/server.js",
+        "worker": "tsx watch src/worker.ts",
+        "start:worker": "node dist/worker.js",
         "test": "vitest run"
     },
     "dependencies": {
