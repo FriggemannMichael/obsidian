@@ -11,6 +11,11 @@ export const apiErrorCodeSchema = z.enum([
     'IDEMPOTENCY_KEY_REUSED',
     'INVALID_STATE',
     'RATE_LIMITED',
+    'INQUIRY_NOT_FOUND',
+    'UPLOAD_TOO_LARGE',
+    'UPLOAD_TYPE_NOT_ALLOWED',
+    'UPLOAD_NOT_FOUND',
+    'TOO_MANY_UPLOADS',
 ]);
 
 export const apiErrorSchema = z.object({

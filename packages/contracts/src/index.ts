@@ -78,3 +78,6 @@ export * from './availability.js';
 export * from './slot-hold.js';
 export * from './admin.js';
 export * from './body-regions.js';
+export * from './inquiry.js';
+export * from './upload.js';
+export * from './admin-inquiry.js';

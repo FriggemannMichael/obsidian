@@ -15,3 +15,6 @@ export const serviceTypeSchema = z.object({
 });
 
 export type ServiceType = z.infer<typeof serviceTypeSchema>;
+
+export const serviceTypesResponseSchema = z.object({ items: z.array(serviceTypeSchema) });
+export type ServiceTypesResponse = z.infer<typeof serviceTypesResponseSchema>;
