@@ -9,6 +9,7 @@ import { createAvailability } from './availability.js';
 import { findServiceType, serviceTypes } from './catalog.js';
 import type { AppConfig } from './config.js';
 import type { Database } from './database/types.js';
+import { adminHoldRoutes } from './routes/admin-holds.js';
 import { availabilityRoutes } from './routes/availability.js';
 import { slotHoldRoutes } from './routes/slot-holds.js';
 import {
@@ -55,6 +56,7 @@ export const buildApp = (options: BuildAppOptions = {}) => {
     if (options.db && options.config) {
         app.register(availabilityRoutes, { db: options.db, config: options.config });
         app.register(slotHoldRoutes, { db: options.db, config: options.config });
+        app.register(adminHoldRoutes, { db: options.db, config: options.config });
     }
 
     app.get('/api/v1/service-types', async () => ({ items: serviceTypes }));
