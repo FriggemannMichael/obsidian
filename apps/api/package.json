@@ -1,0 +1,31 @@
+{
+    "name": "@tattoo-studio/api",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "check-types": "tsc -p tsconfig.json --noEmit",
+        "db:migrate": "tsx src/database/migrate.ts",
+        "dev": "tsx watch src/server.ts",
+        "start": "node dist/server.js",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@fastify/cors": "^11.3.0",
+        "@tattoo-studio/contracts": "*",
+        "fastify": "^5.12.1",
+        "kysely": "^0.29.5",
+        "luxon": "^3.7.2",
+        "pg": "^8.23.0",
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "@types/luxon": "^3.7.5",
+        "@types/node": "^26.3.0",
+        "@types/pg": "^8.23.1",
+        "tsx": "^4.23.12",
+        "typescript": "^5.9.3",
+        "vitest": "^4.1.11"
+    }
+}

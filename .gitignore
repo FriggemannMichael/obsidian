@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+.env.local
+.env.*.local
+*.log
+.DS_Store
+
+# JetBrains user-specific files
+.idea/workspace.xml
+.idea/shelf/
+.idea/httpRequests/

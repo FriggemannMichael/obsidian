@@ -1,0 +1,52 @@
+{
+    "name": "@tattoo-studio/web",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Digitale Termin- und Anfrageverwaltung fuer ein Tattoo-Studio",
+    "keywords": [
+        "chayns",
+        "chayns-toolkit",
+        "react"
+    ],
+    "scripts": {
+        "build": "chayns-toolkit build",
+        "dev": "chayns-toolkit dev",
+        "start": "chayns-toolkit dev",
+        "format": "prettier . --write",
+        "lint": "chayns-toolkit lint",
+        "check-types": "tsc",
+        "test": "vitest run"
+    },
+    "prettier": {
+        "proseWrap": "always",
+        "singleQuote": true,
+        "tabWidth": 4,
+        "printWidth": 100
+    },
+    "dependencies": {
+        "@chayns-components/core": "^5.5.45",
+        "@hookform/resolvers": "^5.9.1",
+        "@tanstack/react-query": "5.102.5",
+        "@tattoo-studio/contracts": "*",
+        "chayns-api": "^3.5.1",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-hook-form": "^7.86.0",
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "^7.0.1",
+        "@testing-library/react": "^16.3.2",
+        "@testing-library/user-event": "^14.6.6",
+        "@types/react": "^18.3.31",
+        "@types/react-dom": "^18.3.7",
+        "@vitejs/plugin-react": "^6.1.0",
+        "@vitest/coverage-v8": "^4.1.11",
+        "chayns-toolkit": "^4.2.1",
+        "jsdom": "^30.0.1",
+        "prettier": "^3.9.6",
+        "prettier-plugin-packagejson": "^3.0.2",
+        "typescript": "^5.9.3",
+        "vitest": "^4.1.11"
+    }
+}
