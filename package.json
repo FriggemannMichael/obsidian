@@ -20,6 +20,6 @@
         "test": "npm run build --workspace @tattoo-studio/contracts && npm run test --workspaces --if-present"
     },
     "devDependencies": {
-        "concurrently": "^10.0.5"
+        "concurrently": "^10.0.6"
     }
 }
